@@ -51,6 +51,9 @@ async def main():
 asyncio.run(main())
 ```
 
+
+### Check [Documentation](https://wareraapi.readthedocs.io/en/latest/)!
+
 ## Development
 
 This project is currently in development and provides access to most of the WarEra API. The full API is not fully documented in the current time so further developments intend to support as much from the api as possible
