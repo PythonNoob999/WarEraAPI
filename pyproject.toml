@@ -12,7 +12,7 @@ authors = [
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
-    "aiohttp"
+    "aiohttp>=3.13.4"
 ]
 
 [tool.setuptools.packages.find]

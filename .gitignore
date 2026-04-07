@@ -1,5 +1,11 @@
 **__pycache__
 **.venv
 *.egg-info
+*.whl
+*.gz
 *test*
 pyrightconfig.json
+docs/build
+docs/make.bat
+docs/source/_static
+docs/source/_templates

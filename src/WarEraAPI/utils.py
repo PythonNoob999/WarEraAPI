@@ -1,6 +1,19 @@
 from datetime import datetime
 from typing import get_args
 
+from json import dumps
+
+
+def pretty_json(
+    data: dict
+) -> str:
+    
+    return dumps(
+        data,
+        indent=4,
+        ensure_ascii=False
+    )
+
 
 def is_type_dict_based(
     _class: type
@@ -23,7 +36,7 @@ def edit_types(
         obj.__annotations__.items() if class_overwrite==None else
         class_overwrite.__annotations__.items()
     ):
-        
+
         if not isinstance(obj, dict):
             cur_value = getattr(obj, attr_name, None)
             attr_type = (attr_type,) if not get_args(attr_type) else get_args(attr_type)
@@ -32,6 +45,17 @@ def edit_types(
             if datetime in attr_type and isinstance(cur_value, str):
                 setattr(obj, attr_name,datetime.fromisoformat(cur_value))
             
+            # fix list of dates
+            elif datetime in attr_type and isinstance(cur_value, list):
+
+                new_value = []
+
+                for date in cur_value:
+                    new_value.append(
+                        datetime.fromisoformat(date)
+                    )
+                
+                setattr(obj, attr_name, new_value)
 
         
         elif isinstance(obj, dict):
@@ -42,6 +66,18 @@ def edit_types(
             # fix dates from api response
             if datetime in attr_type and isinstance(cur_value, str):
                 obj[attr_name] = datetime.fromisoformat(cur_value)
+
+            # fix list of dates
+            elif datetime in attr_type and isinstance(cur_value, list):
+
+                new_value = []
+
+                for date in cur_value:
+                    new_value.append(
+                        datetime.fromisoformat(date)
+                    )
+                
+                obj[attr_name] = new_value
         
 
         # fix nested TypedDict based types inside an object

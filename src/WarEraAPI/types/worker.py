@@ -3,6 +3,7 @@ from datetime import datetime
 
 from WarEraAPI.utils import edit_types
 
+
 @dataclass
 class Worker:
 

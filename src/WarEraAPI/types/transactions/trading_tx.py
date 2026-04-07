@@ -1,4 +1,4 @@
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from datetime import datetime
 from typing import Literal
 
@@ -7,18 +7,18 @@ from WarEraAPI.utils import edit_types
 
 
 @dataclass
-class TradingOrder:
+class TradingTransaction:
 
     _id: str
-    user: str
+    money: float
     itemCode: ITEM
     quantity: int
-    price: float
-    offerAt: datetime
-    type: Literal["buy", "sell"]
-
-    # optional
-    country: str | None = field(default=None)
+    sellerId: str
+    buyerId: str
+    transactionType: Literal["trading"]
+    offerCreatedAt: datetime
+    createdAt: datetime
+    updatedAt: datetime
 
 
     def __post_init__(self):

@@ -22,15 +22,15 @@ class Company:
     workerCount: int
     createdAt: datetime
     updatedAt: datetime
-    estimatedValue: float
     movedUpAt: datetime
     # optional
-    workers: None | List[Worker] = field(default=None)
-    workOffer: None | str = field(default=None)
-    disabledAt: None | datetime = field(default=None)
+    estimatedValue: float | None = field(default=None)
+    workers: List[Worker] | None = field(default=None)
+    workOffer: str | None  = field(default=None)
+    disabledAt: datetime | None  = field(default=None)
     # yeah idk what are these params
-    dates: None | dict = field(default=None)
-    upgradesV2: None | dict = field(default=None)
+    dates: dict | None  = field(default=None)
+    upgradesV2: dict | None  = field(default=None)
 
 
     def __post_init__(self):

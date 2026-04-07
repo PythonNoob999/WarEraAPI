@@ -2,22 +2,23 @@ from dataclasses import dataclass, field
 from datetime import datetime
 from typing import Literal
 
-from WarEraAPI.types.constants import ITEM
 from WarEraAPI.utils import edit_types
 
 
 @dataclass
-class TradingOrder:
+class BattleOrder:
 
     _id: str
     user: str
-    itemCode: ITEM
-    quantity: int
-    price: float
-    offerAt: datetime
-    type: Literal["buy", "sell"]
-
-    # optional
+    battle: str
+    side: Literal["attacker", "defender"]
+    sideCountry: str
+    text: str
+    priority: Literal["low", "medium", "high"]
+    isActive: bool
+    createdAt: datetime
+    updatedAt: datetime
+    mu: str | None = field(default=None)
     country: str | None = field(default=None)
 
 
