@@ -181,7 +181,7 @@ class WarEraClient:
         cursor: str | None = None,
         limit: int = 10,
         return_companies: bool = False
-    ) -> tuple[list[str] | list[Company], str]:
+    ) -> tuple[list[str] | list[Company], str | None]:
         '''
         company.getCompanies endpoint
         
@@ -194,7 +194,7 @@ class WarEraClient:
         :param return_companies: whether to return the Companies as list[Company] instead of list[str] (the ids)
         :type return_companies: bool
         :return: tuple[0] = list[str] or list[Company], tuple[1] = next_cursor (use it for next page in the "cursor" argument) 
-        :rtype: tuple[list[str] | list[Company], str]
+        :rtype: tuple[list[str] | list[Company], str | None]
         '''
         
         result = await self.request(
@@ -218,7 +218,7 @@ class WarEraClient:
 
         return (
             items,
-            result["nextCursor"]
+            result.get("nextCursor")
         )
     
 
@@ -376,7 +376,7 @@ class WarEraClient:
         energy: int = 0,
         production: int = 0,
         citizenship: str | None = None,
-    ) -> tuple[list[WorkOffer], str]:
+    ) -> tuple[list[WorkOffer], str | None]:
         '''
         workOffer.get_work_offers
         get many work offers and optionally filter them
@@ -396,8 +396,8 @@ class WarEraClient:
         :type production: int
         :param citizenship: the country name
         :type citizenship: str | None
-        :return: tuple with the first index holding the WorkOffer objects and the second having the next cursor
-        :rtype: tuple[list[WorkOffer], str]
+        :return: tuple with the first index holding the WorkOffer objects and the second having the next cursor (optional)
+        :rtype: tuple[list[WorkOffer], str | None]
         '''
         
         result = await self.request(
@@ -418,7 +418,7 @@ class WarEraClient:
             [
             WorkOffer(**work_offer) for work_offer in result["items"]
             ],
-            result["nextCursor"]
+            result.get("nextCursor")
         )
     
     # ranking
@@ -554,7 +554,7 @@ class WarEraClient:
         limit: int = 10,
         cursor: str | None = None,
         return_users: bool = False
-    ) -> tuple[list[User] | dict[str, str], str]:
+    ) -> tuple[list[User] | dict[str, str], str | None]:
         '''
         user.get_country_users
         get users from a certain country
@@ -567,8 +567,8 @@ class WarEraClient:
         :type cursor: str | None
         :param return_users: wether to return User objects or just user Ids
         :type return_users: bool
-        :return: a tuple with the first index holding a list of User objects (or str in case of return_users=False) and the second index holding the next cursor
-        :rtype: tuple[list[User] | dict[str, str], str]
+        :return: a tuple with the first index holding a list of User objects (or str in case of return_users=False) and the second index holding the next cursor (optional)
+        :rtype: tuple[list[User] | dict[str, str], str | None]
         '''
         
         result = await self.request(
@@ -597,7 +597,7 @@ class WarEraClient:
         
         return (
             items,
-            result["nextCursor"]
+            result.get("nextCursor")
         )
     
 
@@ -662,7 +662,7 @@ class WarEraClient:
         categories: list[ARTICLE_CATEGORY] | None = None,
         languages: list[str] | None = None,
         positiveScoreOnly: bool = False
-    ) -> tuple[list[Article], str]:
+    ) -> tuple[list[Article], str | None]:
         '''
         article.get_articles
         get many articles with optional filtering
@@ -682,8 +682,8 @@ class WarEraClient:
         :type languages: list[str] | None
         :param positiveScoreOnly: wether to return only positive articles or not (positive = article with > 0 (likes-dislikes))
         :type positiveScoreOnly: bool
-        :return: a tuple with the first index holding a list of Article objects and the second holding the next cursor
-        :rtype: tuple[list[Article], str]
+        :return: a tuple with the first index holding a list of Article objects and the second holding the next cursor (optional)
+        :rtype: tuple[list[Article], str | None]
         '''
         
         result = await self.request(
@@ -704,7 +704,7 @@ class WarEraClient:
             [
                 Article(**article) for article in result["items"]
             ],
-            result["nextCursor"]
+            result.get("nextCursor")
         )
     
     # Military Units
@@ -741,7 +741,7 @@ class WarEraClient:
         memberId: str | None = None,
         userId: str | None = None,
         search: str | None = None
-    ) -> tuple[list[MilitaryUnit], str]:
+    ) -> tuple[list[MilitaryUnit], str | None]:
         '''
         mu.get_many_mu
         get many MilitaryUnits with optional filtering
@@ -757,8 +757,8 @@ class WarEraClient:
         :type userId: str | None
         :param search: optional text to filter with
         :type search: str | None
-        :return: a tuple with first index holding the list of MilitaryUnit objects and the second holding the next cursor
-        :rtype: tuple[list[MilitaryUnit], str]
+        :return: a tuple with first index holding the list of MilitaryUnit objects and the second holding the next cursor (optional)
+        :rtype: tuple[list[MilitaryUnit], str | None]
         '''
 
         result = await self.request(
@@ -777,7 +777,7 @@ class WarEraClient:
             [
                 MilitaryUnit(**mu) for mu in result["items"]
             ],
-            result["nextCursor"]
+            result.get("nextCursor")
         )
     
 
@@ -947,7 +947,7 @@ class WarEraClient:
         cursor: str | None = None,
         countryId: str | None = None,
         eventTypes: list[EVENT_TYPES] | None = None
-    ) -> list[Event]:
+    ) -> tuple[list[Event], str | None]:
         '''
         event.get_events
         get a list of events and optionally filter with Country Id
@@ -960,8 +960,8 @@ class WarEraClient:
         :type countryId: str | None
         :param eventTypes: specific event type to fetch (optional)
         :type eventTypes: list[EVENT_TYPES] | None
-        :return: a list of Event objects
-        :rtype: list[Event]
+        :return: a tuple with the first index holding list of Event objects and the second optionally holding the next cursor
+        :rtype: tuple[list[Event], str | None]
         '''
         
         result = await self.request(
@@ -975,9 +975,12 @@ class WarEraClient:
             }
         )
 
-        return [
+        return (
+            [
             Event(**event) for event in result
-        ]
+            ],
+            result.get("nextCursor")
+        )
     
 
     # Government
@@ -1094,7 +1097,7 @@ class WarEraClient:
         defenderRegionId: str | None = None,
         warId: str | None = None,
         countryId: str | None = None
-    ) -> list[Battle]:
+    ) -> tuple[list[Battle], str | None]:
         '''
         battle.get_battles
         get many battles with optional filtering
@@ -1116,8 +1119,8 @@ class WarEraClient:
         :type warId: str | None
         :param countryId: the country Id (optional)
         :type countryId: str | None
-        :return: a list of Battle objects
-        :rtype: list[Battle]
+        :return: a tuple with the first index holding list of Battle objects and the second holding an optional cursor
+        :rtype: tuple[list[Battle], str | None]
         '''
         
         result = await self.request(
@@ -1135,9 +1138,12 @@ class WarEraClient:
             }
         )
 
-        return [
+        return (
+            [
             Battle(**battle) for battle in result["items"]
-        ]
+            ],
+            result.get("nextCursor")
+        )
     
 
     async def get_live_battle_data(
@@ -1349,7 +1355,7 @@ class WarEraClient:
     async def get_user_inventory(
         self,
         userId: str
-    ) -> None:
+    ) -> UserEquipments:
         '''
         inventory.get_user_inventory
         get a user equipments
