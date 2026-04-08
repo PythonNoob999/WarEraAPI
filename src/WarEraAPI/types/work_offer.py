@@ -18,8 +18,10 @@ class WorkOffer:
     wage: float
     createdAt: datetime
     updatedAt: datetime
+    wageAfterTax: float
 
     # optional
+    text: str | None = field(default=None)
     minEnergy: int | None = field(default=None)
     minProduction: int | None = field(default=None)
     citizenship: str | None = field(default=None)
