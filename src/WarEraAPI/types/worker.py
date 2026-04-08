@@ -10,7 +10,7 @@ class Worker:
     _id: str
     user: str
     wage: float
-    joinedAt: datetime
+    joinedAt: datetime | None = field(default=None)
     company: str | None = field(default=None)
     employer: str | None = field(default=None)
     fidelity: int | None = field(default=None)
