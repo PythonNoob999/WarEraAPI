@@ -1373,3 +1373,28 @@ class WarEraClient:
         )
 
         return UserEquipments(**result)
+
+    # gameStat
+
+    async def get_avg_equipment_price(
+        self,
+        item: ITEM_MARKET_CODE
+    ) -> float:
+        '''
+        gameStat.get_avg_equipment_price
+        
+        :param item: the equipment code
+        :type item: ITEM_MARKET_CODE
+        :return: the price
+        :rtype: float
+        '''
+        
+        result = await self.request(
+            method="POST",
+            endpoint="gameStat.getEquipmentAvgByCode",
+            body={
+                "itemCode": item
+            }
+        )
+
+        return result
