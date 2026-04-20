@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "WarEraAPI"
-version = "0.1.4"
+version = "0.1.5"
 description = "an api client for the online Multiplayer game WarEra written in python (unfinished)"
 authors = [
     { name = "SpicyPenguin", email = "kerolisand@gmail.com" }

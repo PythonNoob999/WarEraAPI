@@ -24,6 +24,7 @@ class User:
     skills: UserSkills
     militaryRank: int
     createdAt: datetime
+    orgs: list | None = field(default=None)
     stats: UserStats | None = field(default=None)
     rankings: UserRankings | None = field(default=None)
     mu: str | None = field(default=None)
