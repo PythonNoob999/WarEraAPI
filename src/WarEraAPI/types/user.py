@@ -44,6 +44,7 @@ class User:
     infos: dict[str, Any] | None = field(default=None)
     warning: dict[str, Any] | None = field(default=None)
     discord: dict[str, Any] | None = field(default=None)
+    equippedSkinKeys: dict[str, str] | None = field(default=None)
 
 
     def __post_init__(self):
