@@ -10,6 +10,8 @@ from WarEraAPI.types.constants import UserSkills
 from WarEraAPI.types.constants import UserStats
 from WarEraAPI.types.constants import UserEquipment
 from WarEraAPI.types.constants import UserRankings
+from WarEraAPI.types.constants import UserBuffs
+from WarEraAPI.types.constants import UserMute
 
 
 @dataclass
@@ -45,6 +47,10 @@ class User:
     warning: dict[str, Any] | None = field(default=None)
     discord: dict[str, Any] | None = field(default=None)
     equippedSkinKeys: dict[str, str] | None = field(default=None)
+    animatedAvatarUrl: str | None = field(default=None)
+    buffs: UserBuffs | None = field(default=None)
+    mute: UserMute | None = field(default=None)
+    isLocked: bool | None = field(default=None)
 
 
     def __post_init__(self):

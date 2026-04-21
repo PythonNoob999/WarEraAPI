@@ -234,6 +234,16 @@ class LiveRoundStats(TypedDict):
 
 # User Stuff
 
+class UserMute(TypedDict):
+
+    reason: str
+    mutedUntil: datetime
+
+class UserBuffs(TypedDict):
+
+    buffCodes: list[str]
+    buffEndAt: datetime
+
 class UserLeveling(TypedDict):
 
     level: int

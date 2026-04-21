@@ -567,7 +567,7 @@ class WarEraClient:
         :type cursor: str | None
         :param return_users: wether to return User objects or just user Ids
         :type return_users: bool
-        :return: a tuple with the first index holding a list of User objects (or str in case of return_users=False) and the second index holding the next cursor (optional)
+        :return: a tuple with the first index holding a list of User objects (or dict[str, str] in case of return_users=False) and the second index holding the next cursor (optional)
         :rtype: tuple[list[User] | dict[str, str], str | None]
         '''
         
