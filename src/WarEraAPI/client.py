@@ -1398,3 +1398,30 @@ class WarEraClient:
         )
 
         return result
+    
+
+    # party
+
+
+    async def get_party(
+        self,
+        partyId: str
+    ) -> Party:
+        '''
+        party.get_party
+
+        :param partyId: the party Id
+        :type partyId: str
+        :return: a Party object
+        :rtype: Party
+        '''
+
+        result = await self.request(
+            method="POST",
+            endpoint="party.getById",
+            body={
+                "partyId": partyId
+            }
+        )
+
+        return Party(**result)

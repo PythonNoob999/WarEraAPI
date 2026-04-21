@@ -450,6 +450,17 @@ class ItemMarket(TypedDict):
     lastAcquisitionAt: datetime
     isEquipStatsMigrated: bool | None
 
+
+# Party stuff
+
+class PartyEthics(TypedDict):
+
+    militarism: int
+    isolationism: int
+    imperialism: int
+    inudstrialism: int
+
+
 # Minimal Stuff
 
 class MinimalRound(TypedDict):

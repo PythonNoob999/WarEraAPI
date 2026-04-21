@@ -20,6 +20,7 @@ from .production_bonus import ProductionBonus
 from .entity_upgrade import EntityUpgrade
 from .battle_order import BattleOrder
 from .user_equipments import UserEquipments
+from .party import Party
 from .transactions import *
 from .constants import *
 
