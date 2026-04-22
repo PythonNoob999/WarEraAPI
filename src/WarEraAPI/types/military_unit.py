@@ -24,7 +24,8 @@ class MilitaryUnit:
     activeUpgradeLevels: MUActiveUpgradeLevels
     rankings: MURankings
     avatarUrl: str | None = field(default=None)
-    animatedAvatarUrl: str | None = field(default=None)    
+    animatedAvatarUrl: str | None = field(default=None)
+    investedMoneyByUsers: float | None = field(default=None)
 
 
     def __post_init__(self):

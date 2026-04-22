@@ -32,7 +32,7 @@ class WarEraClient:
         if api_key is None:
             rate_limit = 100
 
-        self.uri: str = "https://api2.warera.io/trpc"
+        self.uri: str = "https://api5.warera.io/trpc"
         self.rate_limit: int = rate_limit
         self._semaphore = asyncio.Semaphore(rate_limit)
         self._refill_task = None
