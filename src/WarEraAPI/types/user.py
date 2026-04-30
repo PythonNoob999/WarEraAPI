@@ -51,6 +51,11 @@ class User:
     buffs: UserBuffs | None = field(default=None)
     mute: UserMute | None = field(default=None)
     isLocked: bool | None = field(default=None)
+    avatar: str | None = field(default=None)
+    phoneVerificationRequiredAt: datetime | None = field(default=None)
+    isAdmin: bool | None = field(default=None)
+    # TODO: add the type structure for thess args
+    skillsExpiration: dict | None = field(default=None)
 
 
     def __post_init__(self):

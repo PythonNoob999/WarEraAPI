@@ -22,10 +22,10 @@ class MilitaryUnit:
     roles: MURoles
     leveling: MULeveling
     activeUpgradeLevels: MUActiveUpgradeLevels
-    rankings: MURankings
+    rankings: MURankings | None = field(default=None)
     avatarUrl: str | None = field(default=None)
     animatedAvatarUrl: str | None = field(default=None)
-    investedMoneyByUsers: float | None = field(default=None)
+    investedMoneyByUsers: dict[str, float] | None = field(default=None)
 
 
     def __post_init__(self):

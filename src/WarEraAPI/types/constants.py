@@ -434,6 +434,7 @@ class MURankings(TypedDict):
 class MUActiveUpgradeLevels(TypedDict):
 
     dormitories: int
+    headquarters: int | None
 
 
 # Transactions Stuff
