@@ -26,6 +26,7 @@ class MilitaryUnit:
     avatarUrl: str | None = field(default=None)
     animatedAvatarUrl: str | None = field(default=None)
     investedMoneyByUsers: dict[str, float] | None = field(default=None)
+    lastReputationBuyAt: datetime | None = field(default=None)
 
 
     def __post_init__(self):
