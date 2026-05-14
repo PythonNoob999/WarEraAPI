@@ -387,6 +387,10 @@ class UserRankings(TypedDict):
     damagesCount: int | None
 
 
+class UserPreferences(TypedDict):
+
+    autoReplaceOnBreak: bool
+
 # Article Stuff
 
 class ArticleStats(TypedDict):

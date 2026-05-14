@@ -12,6 +12,7 @@ from WarEraAPI.types.constants import UserEquipment
 from WarEraAPI.types.constants import UserRankings
 from WarEraAPI.types.constants import UserBuffs
 from WarEraAPI.types.constants import UserMute
+from WarEraAPI.types.constants import UserPreferences
 
 
 @dataclass
@@ -54,6 +55,7 @@ class User:
     avatar: str | None = field(default=None)
     phoneVerificationRequiredAt: datetime | None = field(default=None)
     isAdmin: bool | None = field(default=None)
+    preferences: UserPreferences | None = field(default=None)
     # TODO: add the type structure for thess args
     skillsExpiration: dict | None = field(default=None)
 
