@@ -20,3 +20,15 @@ class TransactionTypeNotSupported(Exception):
 
     def __str__(self):
         return f"This TransactionType is not supported in current lib version ('{self.tx_type}')"
+
+
+class NoAvailableServer(Exception):
+    '''raised when there are no available game servers to process your request'''
+
+
+    def __init__(self, *args):
+        super().__init__(*args)
+    
+
+    def __str__(self):
+        return "NoAvailableServer"

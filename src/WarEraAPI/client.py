@@ -1,4 +1,4 @@
-from aiohttp import ClientSession
+from aiohttp import ClientSession, ContentTypeError
 from typing import Literal, Any
 
 from WarEraAPI.types import *
@@ -6,6 +6,7 @@ from WarEraAPI.utils import edit_types
 from WarEraAPI.utils import pretty_json
 from WarEraAPI.errors import APIError
 from WarEraAPI.errors import TransactionTypeNotSupported
+from WarEraAPI.errors import NoAvailableServer
 
 import asyncio
 
@@ -146,6 +147,10 @@ class WarEraClient:
                     response = (await resp.json())["result"]["data"]
                 except KeyError:
                     raise APIError(pretty_json(await resp.json()))
+                except ContentTypeError:
+                    if resp.status == 503:
+                        raise NoAvailableServer
+                    raise APIError(await resp.text())
                 self.sanitize_response(response)
                 return response
 
