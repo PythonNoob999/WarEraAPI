@@ -18,6 +18,9 @@ class Worker:
     createdAt: datetime | None = field(default=None)
     updatedAt: datetime | None = field(default=None)
     lastFidelityIncreaseAt: datetime | None = field(default=None)
+    lastWageReductionAt: datetime | None = field(default=None)
+    previousWage: float | None = field(default=None)
+    lastWageReductionAcceptationAt: datetime | None = field(default=None)
 
 
     def __post_init__(self):
