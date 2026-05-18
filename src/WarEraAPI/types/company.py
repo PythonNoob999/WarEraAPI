@@ -22,8 +22,8 @@ class Company:
     workerCount: int
     createdAt: datetime
     updatedAt: datetime
-    movedUpAt: datetime
     # optional
+    movedUpAt: datetime | None = field(default=None)
     estimatedValue: float | None = field(default=None)
     workers: List[Worker] | None = field(default=None)
     workOffer: str | None  = field(default=None)
