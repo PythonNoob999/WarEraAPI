@@ -9,3 +9,4 @@ docs/build
 docs/make.bat
 docs/source/_static
 docs/source/_templates
+*.json
