@@ -35,6 +35,7 @@ class Country:
     specializedItem: ITEM | None = field(default=None)
     strategicResources: StrategicResources | None = field(default=None)
     bordersOpenUntil: datetime | None = field(default=None)
+    nonAggressionUntil: datetime | None = field(default=None)
 
 
     def __post_init__(self):
