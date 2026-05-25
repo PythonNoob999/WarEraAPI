@@ -29,29 +29,28 @@ class WarEraClient:
         '''
 
         self.api_key: str | None = api_key
-
-        if api_key is None:
-            rate_limit = 100
-
         self.uri: str = "https://api2.warera.io/trpc"
         self.rate_limit: int = rate_limit
-        self._semaphore = asyncio.Semaphore(rate_limit)
-        self._refill_task = None
+        self._tokens = asyncio.Queue(maxsize=rate_limit)
+
+        for _ in range(rate_limit):
+            self._tokens.put_nowait(1)
+
+        self._refill_task: asyncio.Task | None = None
 
 
     async def _refill_loop(self):
+        """Refills the bucket to max capacity every 60 seconds."""
         while True:
             await asyncio.sleep(60)
-
-            to_add = self.rate_limit - self._semaphore._value
-            for _ in range(to_add):
-                self._semaphore.release()
+            tokens_to_add = self._tokens.maxsize - self._tokens.qsize()
+            for _ in range(tokens_to_add):
+                self._tokens.put_nowait(1)
 
 
     def _ensure_refill_running(self):
-        if self._refill_task is None:
+        if self._refill_task is None or self._refill_task.done():
             self._refill_task = asyncio.create_task(self._refill_loop())
-
 
     def sanitize_response(
         self,
@@ -120,26 +119,25 @@ class WarEraClient:
         headers: dict | None = None,
         body: dict | None = None
     ) -> Any:
-        
+
         if headers is None:
             headers = {}
-        
+
         headers["Content-Type"] = "application/json"
-        
+
         if self.api_key:
             headers["X-API-Key"] = self.api_key
-        
+
         if isinstance(body, dict):
             self.sanitize_body(body)
 
         self._ensure_refill_running()
-        await self._semaphore.acquire()
+        await self._tokens.get()
 
         async with ClientSession() as api:
-
             async with api.request(
                 method,
-                self.uri+"/"+endpoint,
+                self.uri + "/" + endpoint,
                 headers=headers,
                 json=body
             ) as resp:
