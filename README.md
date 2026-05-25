@@ -69,7 +69,7 @@ This project is currently in development and provides access to most of the WarE
 
 ### Roadmap
 
-- [ ] adding use examples
+- [x] adding use examples
 - [ ] documenting types
 - [ ] implementing the unsupported endpoints
 - [ ] add more abstract/QOL methods

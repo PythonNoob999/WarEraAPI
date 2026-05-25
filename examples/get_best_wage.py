@@ -1,3 +1,6 @@
+'''this script is used to get the best wage (net) for your-
+current energy,production levels'''
+
 from WarEraAPI import WarEraClient
 from WarEraAPI import WorkOffer
 
