@@ -33,6 +33,7 @@ Submodules
    WarEraAPI.types.government
    WarEraAPI.types.item_offer
    WarEraAPI.types.military_unit
+   WarEraAPI.types.party
    WarEraAPI.types.production_bonus
    WarEraAPI.types.rankings
    WarEraAPI.types.recommended_region
