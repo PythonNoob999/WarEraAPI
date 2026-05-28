@@ -13,6 +13,7 @@ WarEraAPI is an asynchronous Python client that provides access to (most of) the
 - **Type Safety**: Full type hints and data models for all API responses
 - **Pagination Support**: Built-in pagination handling for large datasets
 - **Rate Limiting Support**: yeah, thats it
+- **LightWeight**: uses dataclasses instead of pydantic
 
 ## Installation
 
@@ -66,13 +67,15 @@ This project is currently in development and provides access to most of the WarE
   * getById
 * gameConfig
   * getGameConfig
+* mercenaryContractAuction
+  * getPaginatedAuctions
 
 ### Roadmap
 
 - [x] adding use examples
-- [ ] documenting types
-- [ ] implementing the unsupported endpoints
 - [ ] add more abstract/QOL methods
+- [ ] implementing the unsupported endpoints
+- [ ] ~~documenting types~~
 
 ## License
 
