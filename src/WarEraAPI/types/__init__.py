@@ -23,6 +23,7 @@ from .user_equipments import UserEquipments
 from .party import Party
 from .transactions import *
 from .constants import *
+from .events import *
 
 from typing import TypeAlias
 
