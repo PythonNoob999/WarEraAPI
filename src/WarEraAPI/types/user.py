@@ -56,6 +56,7 @@ class User:
     phoneVerificationRequiredAt: datetime | None = field(default=None)
     isAdmin: bool | None = field(default=None)
     preferences: UserPreferences | None = field(default=None)
+    lastUsernames: list[str] | None = field(default=None)
     # TODO: add the type structure for thess args
     skillsExpiration: dict | None = field(default=None)
 
