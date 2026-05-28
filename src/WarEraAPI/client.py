@@ -1009,7 +1009,7 @@ class WarEraClient:
 
         return (
             [
-            Event(**event) for event in result
+            Event(**event) for event in result["items"]
             ],
             result.get("nextCursor")
         )
