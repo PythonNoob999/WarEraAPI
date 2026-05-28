@@ -2,6 +2,7 @@ from dataclasses import dataclass
 from datetime import datetime
 
 from WarEraAPI.utils import edit_types
+from WarEraAPI.types.events import EventType
 
 
 @dataclass
@@ -10,7 +11,7 @@ class Event:
     _id: str
     countries: list[str]
     priority: int
-    data: dict
+    data: EventType
     createdAt: datetime
     updatedAt: datetime
 
