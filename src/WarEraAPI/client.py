@@ -17,7 +17,8 @@ class WarEraClient:
     def __init__(
         self,
         api_key: str | None = None,
-        rate_limit: int = 200
+        rate_limit: int = 200,
+        bulk_requests_mode: Literal["sequential", "parallel"] = "parallel"
     ):
         '''
         WarEraClient.__init__
@@ -26,12 +27,15 @@ class WarEraClient:
         :type api_key: str | None
         :param rate_limit: amount of requests sent per minute max
         :type rate_limit: int
+        :param bulk_requests_mode: which to preform bulk_requests (like return_companies in get_companies) sequentially or in parallel, defaults to parallel
+        :type bulk_requests_mode: Literal["sequential", "parallel"]
         '''
 
         self.api_key: str | None = api_key
         self.uri: str = "https://api2.warera.io/trpc"
         self.rate_limit: int = rate_limit
-        self._tokens = asyncio.Queue(maxsize=rate_limit)
+        self._tokens: asyncio.Queue = asyncio.Queue(maxsize=rate_limit)
+        self.bulk_requests_mode: Literal["sequential", "parallel"] = bulk_requests_mode
 
         for _ in range(rate_limit):
             self._tokens.put_nowait(1)
@@ -214,10 +218,24 @@ class WarEraClient:
 
         if return_companies:
 
-            items = [
-                (await self.get_company(companyId=cid))
-                for cid in items
-            ]
+            if self.bulk_requests_mode == "parallel":
+                _tasks = [
+                    asyncio.create_task(
+                        self.get_company(
+                            companyId=cid
+                        )
+                    ) for cid in items
+                ]
+                items = await asyncio.gather(*_tasks)
+
+            elif self.bulk_requests_mode == "sequential":
+                _items = []
+
+                for cid in items:
+                    company = await self.get_company(companyId=cid)
+                    _items.append(company)
+                
+                items = _items
 
         return (
             items,
@@ -587,16 +605,27 @@ class WarEraClient:
 
         if return_users:
 
-            new_items = []
+            _items = []
 
-            for item in items:
+            if self.bulk_requests_mode == "parallel":
+                _tasks = [
+                    asyncio.create_task(
+                        self.get_user(
+                            userId=cid["_id"]
+                        )
+                    ) for cid in items
+                ]
+                items = await asyncio.gather(*_tasks)
 
-                user = await self.get_user(
-                    userId=item["_id"]
-                )
-                new_items.append(user)
-            
-            items = new_items
+            elif self.bulk_requests_mode == "sequential":
+
+                _items = []
+
+                for cid in items:
+                    user = await self.get_user(userId=cid["_id"])
+                    _items.append(user)
+                
+                items = _items
         
         return (
             items,
