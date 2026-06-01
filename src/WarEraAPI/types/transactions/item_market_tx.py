@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from datetime import datetime
 from typing import Literal
 
@@ -21,6 +21,7 @@ class ItemMarketTransaction:
     offerCreatedAt: datetime
     createdAt: datetime
     updatedAt: datetime
+    processedByModAt: datetime | None = field(default=None)
 
 
     def __post_init__(self):
