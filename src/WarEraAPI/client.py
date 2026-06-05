@@ -245,22 +245,24 @@ class WarEraClient:
 
     async def get_company_recommended_regions(
         self,
-        companyId: str
+        item_code: ITEM,
+        include_deposits: bool = True
     ) -> list[RecommendedRegion]:
-        '''
-        company.get_company_recommended_regions
-        
-        :param companyId: the company Id
-        :type companyId: str
-        :return: a list of RecommendedRegion objects (not sorted)
+        '''company.get_recommended_region_ids_by_item_code
+
+        :param item_code: the item Code to fetch its regions
+        :type item_code: ITEM
+        :param include_deposits: whether to include regions with active deposits or not (defaults to True)
+        :type include_deposits: bool
         :rtype: list[RecommendedRegion]
         '''
         
         result = await self.request(
             method="POST",
-            endpoint="company.getRecommendedRegionIds",
+            endpoint="company.getRecommendedRegionIdsByItemCode",
             body={
-                "companyId": companyId
+                "itemCode": item_code,
+                "includeDeposit": include_deposits,
             }
         )
 
