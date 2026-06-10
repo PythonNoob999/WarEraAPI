@@ -11,7 +11,8 @@ ITEM: TypeAlias = Literal[
     "bread", "steak", "cookedFish",
     "lead",
     "ammo", "lightAmmo", "heavyAmmo",
-    "case1", "case2", "scraps", "cocain", "coca"
+    "case1", "case2", "scraps", "cocain", "coca",
+    "wood", "paper"
 ]
 
 AMMO: TypeAlias = Literal[
