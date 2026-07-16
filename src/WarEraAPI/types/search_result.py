@@ -9,4 +9,5 @@ class SearchResult:
     countryIds: list[str]
     regionIds: list[str]
     partyIds: list[str]
+    allianceIds: list[str]
     hasData: bool
