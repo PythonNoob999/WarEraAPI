@@ -17,6 +17,7 @@ class DonationTransaction:
     sellerCountryId: str | None = field(default=None)
     sellerMuId: str | None = field(default=None)
     sellerPartyId: str | None = field(default=None)
+    processedByModAt: datetime | None = field(default=None)
 
 
     def __post_init__(self):
