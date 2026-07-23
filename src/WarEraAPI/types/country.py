@@ -25,9 +25,12 @@ class Country:
     unrest: Unrest
     rankings: Rankings
     updatedAt: datetime
-    development: float
+    currentPopulation: int
     coreDevelopment: float | None = field(default=None)
+    averageDevelopment: float | None = field(default=None)
+    currentDevelopment: float | None = field(default=None)
     currentBattleOrder: str | None = field(default=None)
+    allianceId: str | None = field(default=None)
     discordUrl: str | None = field(default=None)
     rulingParty: str | None = field(default=None)
     pinnedArticle: str | None = field(default=None)
@@ -37,6 +40,9 @@ class Country:
     strategicResources: StrategicResources | None = field(default=None)
     bordersOpenUntil: datetime | None = field(default=None)
     nonAggressionUntil: datetime | None = field(default=None)
+    defensivePacts: list[str] | None = field(default=None)
+    # TODO: add type hints
+    dates: dict[str, str] | None = field(default=None)
 
 
     def __post_init__(self):
