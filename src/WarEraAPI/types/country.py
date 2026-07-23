@@ -26,6 +26,7 @@ class Country:
     rankings: Rankings
     updatedAt: datetime
     development: float
+    coreDevelopment: float | None = field(default=None)
     currentBattleOrder: str | None = field(default=None)
     discordUrl: str | None = field(default=None)
     rulingParty: str | None = field(default=None)
