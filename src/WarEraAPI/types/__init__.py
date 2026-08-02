@@ -21,6 +21,10 @@ from .entity_upgrade import EntityUpgrade
 from .battle_order import BattleOrder
 from .user_equipments import UserEquipments
 from .party import Party
+from .alliance import Alliance
+from .tournament import Tournament
+from .tournament_team import TournamentTeam
+from .war import War
 from .transactions import *
 from .constants import *
 from .events import *

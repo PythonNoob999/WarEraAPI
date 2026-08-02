@@ -477,6 +477,72 @@ class PartyEthics(TypedDict):
     inudstrialism: int
 
 
+# Alliances Stuff
+
+class AllianceMember(TypedDict):
+
+    country: str
+    coreDevelopment: float
+    averageDevelopment: float
+    suspended: bool
+
+
+class AllianceRanking(TypedDict):
+
+    value: float
+    rank: int
+    tier: TIER
+
+
+class AllianceRankings(TypedDict):
+
+    allianceInitialDevelopment: AllianceRanking
+    allianceDevelopment: AllianceRanking
+    allianceWeeklyDamages: AllianceRanking
+    allianceDamages: AllianceRanking
+    alliancePopulation: AllianceRanking
+    allianceWeeklyDamagesPerCitizen: AllianceRanking
+
+
+
+# Tournament Stuff
+
+class RegisteredParties(TypedDict):
+
+    countries: list[str]
+    mus: list[str]
+    users: list[str]
+
+
+class TournamentMatch(TypedDict):
+
+    matchIndex: int
+    attacker: str
+    defender: str
+    isQualificationRound: bool
+    possibleAttackerTeamIds: list[str]
+    possibleDefenderTeamIds: list[str]
+    battle: str
+    wonBy: str | None
+
+
+class TournamentRound(TypedDict):
+
+    roundNumber: int
+    cases: int
+    skillValue: int | None
+    matches: list[TournamentMatch]
+
+
+# War Stuff
+
+class WarSide(TypedDict):
+
+    country: str
+    wonBattlesCount: int
+    wonRoundsCount: int
+    damages: int
+
 # Minimal Stuff
 
 class MinimalRound(TypedDict):

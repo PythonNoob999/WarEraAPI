@@ -81,15 +81,14 @@ def edit_types(
         
 
         # fix nested TypedDict based types inside an object
-        if any(
-            [
-                is_type_dict_based(_type) for _type in attr_type
-            ]
-        ):
+        for _type in attr_type:
+
+            if not is_type_dict_based(_type):
+                continue
 
             if isinstance(cur_value, dict):
-                edit_types(cur_value, class_overwrite=attr_type[0])
+                edit_types(cur_value, class_overwrite=_type)
 
             elif isinstance(cur_value, list):
                 for item in cur_value:
-                    edit_types(item, class_overwrite=attr_type[0])
+                    edit_types(item, class_overwrite=_type)

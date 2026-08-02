@@ -56,6 +56,7 @@ class WarEraClient:
         if self._refill_task is None or self._refill_task.done():
             self._refill_task = asyncio.create_task(self._refill_loop())
 
+
     def sanitize_response(
         self,
         data: dict | list[dict]
@@ -496,6 +497,56 @@ class WarEraClient:
         )
 
         return SearchResult(**result)
+
+    
+    async def search_mus(
+        self,
+        searchText: str
+    ) -> list[str]:
+        '''
+        search.searchMus
+        search for Mus only
+
+        :param searchText: the text to search with
+        :type searchText: str
+        :return: list of Mu Ids
+        :rtype: list[str]
+        '''
+
+        result = await self.request(
+            method="POST",
+            endpoint="search.searchMus",
+            body={
+                "searchText": searchText
+            }
+        )
+
+        return result
+
+
+    async def search_users(
+        self,
+        searchText: str
+    ) -> list[str]:
+        '''
+        search.searchUsers
+        search for Users only
+
+        :param searchText: the text to search with
+        :type searchText: str
+        :return: list of User Ids
+        :rtype: list[str]
+        '''
+
+        result = await self.request(
+            method="POST",
+            endpoint="search.searchUsers",
+            body={
+                "searchText": searchText
+            }
+        )
+
+        return result
     
 
     # gameConfig
@@ -1459,3 +1510,188 @@ class WarEraClient:
         )
 
         return Party(**result)
+
+    
+    # Alliances
+
+    async def get_alliance(
+        self,
+        allianceId: str
+    ) -> Alliance:
+        '''
+        alliance.get_alliance
+
+        :param allianceId: the alliance Id
+        :type allianceId: str
+        :return: an Alliance object
+        :rtype: Alliance
+        '''
+
+        result = await self.request(
+            method="POST",
+            endpoint="alliance.getById",
+            body={
+                "allianceId": allianceId
+            }
+        )
+
+        return Alliance(**result)
+
+
+    async def get_many_alliances(
+        self,
+        limit: int = 10,
+        page: int | None = None
+    ) -> list[Alliance]:
+        '''
+        alliance.get_many_alliances
+        get many alliances with pagination
+
+        :param limit: the amount of alliances returned
+        :type limit: int
+        :param page: the page number (optional)
+        :type page: int | None
+        :return: a list of Alliance objects
+        :rtype: list[Alliance]
+        '''
+
+        result = await self.request(
+            method="POST",
+            endpoint="alliance.getManyPaginated",
+            body={
+                "limit": limit,
+                "page": page or ""
+            }
+        )
+
+        return [
+            Alliance(
+                **alliance
+            ) for alliance in result["items"]
+        ]
+
+
+    # Tournaments
+
+    async def get_last_tournament(
+        self
+    ) -> Tournament:
+        '''
+        tournament.get_last_tournament
+        get the last tournament
+        
+        :return: a Tournament object
+        :rtype: Tournament
+        '''
+
+        result = await self.request(
+            method="POST",
+            endpoint="tournament.getLastTournament"
+        )
+
+        return Tournament(**result)
+    
+
+    async def get_tournament(
+        self,
+        tournamentId: str
+    ) -> Tournament:
+        '''
+        tournament.get_tournament
+        get info about a specific tournament
+        
+        :param tournamentId: the tournament Id
+        :type tournamentId: str
+        :return: a Tournament object
+        :rtype: Tournament
+        '''
+
+        result = await self.request(
+            method="POST",
+            endpoint="tournament.getById",
+            body={
+                "tournamentId": tournamentId
+            }
+        )
+
+        return Tournament(**result)
+    
+
+    # Tournament Teams
+
+    async def get_tournament_team(
+        self,
+        tournamentTeamId: str
+    ) -> TournamentTeam:
+        '''
+        tournament.get_tournament_team
+        get info about a specific tournament team
+        
+        :param tournamentTeamId: the tournament team Id
+        :type tournamentTeamId: str
+        :return: a TournamentTeam object
+        :rtype: TournamentTeam
+        '''
+
+        result = await self.request(
+            method="POST",
+            endpoint="tournamentTeam.getById",
+            body={
+                "tournamentTeamId": tournamentTeamId
+            }
+        )
+
+        return TournamentTeam(**result)
+    
+
+    async def get_tournament_teams(
+        self,
+        tournamentId: str,
+    ) -> list[TournamentTeam]:
+        '''
+        tournament.get_tournament_teams
+        get many tournament teams with optional filtering
+        with tournament Id
+        
+        :param tournamentId: the tournament Id
+        :type tournamentId: str
+        :return: a list of TournamentTeam objects
+        :rtype: list[TournamentTeam]
+        '''
+
+        result = await self.request(
+            method="POST",
+            endpoint="tournamentTeam.getByTournamentId",
+            body={
+                "tournamentId": tournamentId,
+            }
+        )
+
+        return [TournamentTeam(**team) for team in result]
+    
+
+    # War
+
+    async def get_war(
+        self,
+        warId: str
+    ) -> War:
+        '''
+        war.get_war
+        get info about a specific war
+        
+        :param warId: the war Id
+        :type warId: str
+        :return: a War object
+        :rtype: War
+        '''
+
+        result = await self.request(
+            method="POST",
+            endpoint="war.getById",
+            body={
+                "warId": warId
+            }
+        )
+
+        return War(**result)
