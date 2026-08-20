@@ -24,6 +24,7 @@ class WorkOffer:
     text: str | None = field(default=None)
     minEnergy: int | None = field(default=None)
     minProduction: int | None = field(default=None)
+    minLevel: int | None = field(default=None)
     citizenship: str | None = field(default=None)
 
 
