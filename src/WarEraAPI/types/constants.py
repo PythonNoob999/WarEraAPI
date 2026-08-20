@@ -81,6 +81,20 @@ BATTLE_FILTER: TypeAlias = Literal[
     "all", "yourCountry", "yourEnemies"
 ]
 
+MERCENARY_CONTRACT_STATUS: TypeAlias = Literal[
+    "active", "won", "cancelled",
+    "expiredNoBids", "expiredBattle", "expiredRound"
+]
+
+MERCENARY_CONTRACT_SORT_BY: TypeAlias = Literal[
+    "createdAt", "expiresAt", "currentPerK",
+    "minimumDamage", "budget", "duration"
+]
+
+SORT_ORDER: TypeAlias = Literal[
+    "asc", "desc"
+]
+
 
 class ActiveUpgradeLevels(TypedDict):
 
@@ -542,6 +556,17 @@ class WarSide(TypedDict):
     wonBattlesCount: int
     wonRoundsCount: int
     damages: int
+
+
+# Mercenary Contract Auction Stuff
+
+class MercenaryContractAuctionBid(TypedDict):
+
+    mu: str
+    user: str
+    payout: float
+    perK: float
+    bidAt: datetime
 
 # Minimal Stuff
 

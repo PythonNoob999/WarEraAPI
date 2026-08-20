@@ -1,5 +1,8 @@
 from aiohttp import ClientSession, ContentTypeError
-from typing import Literal, Any
+from typing import Literal, Sequence
+from typing import Any
+from typing import AsyncGenerator
+from typing import overload
 
 from WarEraAPI.types import *
 from WarEraAPI.utils import edit_types
@@ -444,6 +447,35 @@ class WarEraClient:
             ],
             result.get("nextCursor")
         )
+
+
+    async def iter_work_offers(
+        self,
+        regionId: str | None = None,
+        userId: str | None = None,
+        cursor: str | None = None,
+        energy: int = 0,
+        production: int = 0,
+        citizenship: str | None = None,
+    ) -> AsyncGenerator[WorkOffer]:
+
+        cursor = cursor or ""
+
+        while cursor is not None:
+
+            offers, cursor = await self.get_work_offers(
+                regionId=regionId,
+                userId=userId,
+                cursor=cursor,
+                energy=energy,
+                production=production,
+                citizenship=citizenship,
+                limit=100
+            )
+
+            for offer in offers:
+
+                yield offer
     
     # ranking
 
@@ -620,7 +652,28 @@ class WarEraClient:
         )
 
         return User(**result)
-    
+
+
+    @overload
+    async def get_country_users(
+        self,
+        countryId: str,
+        limit: int = 10,
+        cursor: str | None = None,
+        *,
+        return_users: Literal[True]
+    ) -> tuple[list[User], str | None]: ...
+
+
+    @overload
+    async def get_country_users(
+        self,
+        countryId: str,
+        limit: int = 10,
+        cursor: str | None = None,
+        return_users: Literal[False] = False
+    ) -> tuple[list[dict[str, str]], str | None]: ...
+
 
     async def get_country_users(
         self,
@@ -628,7 +681,7 @@ class WarEraClient:
         limit: int = 10,
         cursor: str | None = None,
         return_users: bool = False
-    ) -> tuple[list[User] | dict[str, str], str | None]:
+    ) -> tuple[list[User] | list[dict[str, str]], str | None]:
         '''
         user.get_country_users
         get users from a certain country
@@ -684,6 +737,47 @@ class WarEraClient:
             items,
             result.get("nextCursor")
         )
+
+    
+    @overload
+    def iter_country_users(
+        self,
+        countryId: str,
+        cursor: str | None = None,
+        *,
+        return_users: Literal[True]
+    ) -> AsyncGenerator[User, None]: ...
+
+    @overload
+    def iter_country_users(
+        self,
+        countryId: str,
+        cursor: str | None = None,
+        return_users: Literal[False] = False
+    ) -> AsyncGenerator[dict[str, str], None]: ...
+
+
+    async def iter_country_users(
+        self,
+        countryId: str,
+        cursor: str | None = None,
+        return_users: bool = False
+    ) -> AsyncGenerator[User | dict[str, str], None]:
+
+        cursor = cursor or ""
+
+        while cursor is not None:
+
+            users, cursor = await self.get_country_users(
+                countryId=countryId,
+                cursor=cursor,
+                limit=100,
+                return_users=return_users
+            )
+
+            for user in users:
+
+                yield user
     
 
     # Article
@@ -791,6 +885,35 @@ class WarEraClient:
             ],
             result.get("nextCursor")
         )
+
+
+    async def iter_articles(
+        self,
+        type: ARTICLE_TYPE,
+        cursor: str | None = None,
+        userId: str | None = None,
+        categories: list[ARTICLE_CATEGORY] | None = None,
+        languages: list[str] | None = None,
+        positiveScoreOnly: bool = False
+    ) -> AsyncGenerator[Article, None]:
+
+        cursor = cursor or ""
+
+        while cursor is not None:
+
+            articles, cursor = await self.get_articles(
+                type=type,
+                cursor=cursor,
+                userId=userId,
+                categories=categories,
+                languages=languages,
+                positiveScoreOnly=positiveScoreOnly,
+                limit=100
+            )
+
+            for article in articles:
+
+                yield article
     
     # Military Units
 
@@ -864,9 +987,159 @@ class WarEraClient:
             ],
             result.get("nextCursor")
         )
+
     
+    async def iter_mus(
+        self,
+        cursor: str | None = None,
+        memberId: str | None = None,
+        userId: str | None = None,
+        search: str | None = None
+    ) -> AsyncGenerator[MilitaryUnit, None]:
+
+        cursor = cursor or ""
+
+        while cursor is not None:
+
+            mus, cursor = await self.get_many_mu(
+                cursor=cursor,
+                memberId=memberId,
+                userId=userId,
+                search=search,
+                limit=100
+            )
+
+            for mu in mus:
+
+                yield mu
 
     # Transactions
+
+    @overload
+    async def get_transactions(
+        self,
+        transactionType: Literal["trading"],
+        limit: int = 10,
+        cursor: str | None = None,
+        userId: str | None = None,
+        muId: str | None = None,
+        countryId: str | None = None,
+        partyId: str | None = None,
+        itemCode: ITEM | ITEM_MARKET_CODE | None = None,
+    ) -> tuple[Sequence[TradingTransaction], str | None]: ...
+
+
+    @overload
+    async def get_transactions(
+        self,
+        transactionType: Literal["itemMarket"],
+        limit: int = 10,
+        cursor: str | None = None,
+        userId: str | None = None,
+        muId: str | None = None,
+        countryId: str | None = None,
+        partyId: str | None = None,
+        itemCode: ITEM | ITEM_MARKET_CODE | None = None,
+    ) -> tuple[Sequence[ItemMarketTransaction], str | None]: ...
+
+
+    @overload
+    async def get_transactions(
+        self,
+        transactionType: Literal["battleLoot"],
+        limit: int = 10,
+        cursor: str | None = None,
+        userId: str | None = None,
+        muId: str | None = None,
+        countryId: str | None = None,
+        partyId: str | None = None,
+        itemCode: ITEM | ITEM_MARKET_CODE | None = None,
+    ) -> tuple[Sequence[BattleLootTransaction], str | None]: ...
+
+
+    @overload
+    async def get_transactions(
+        self,
+        transactionType: Literal["wage"],
+        limit: int = 10,
+        cursor: str | None = None,
+        userId: str | None = None,
+        muId: str | None = None,
+        countryId: str | None = None,
+        partyId: str | None = None,
+        itemCode: ITEM | ITEM_MARKET_CODE | None = None,
+    ) -> tuple[Sequence[WageTransaction], str | None]: ...
+
+
+    @overload
+    async def get_transactions(
+        self,
+        transactionType: Literal["donation"],
+        limit: int = 10,
+        cursor: str | None = None,
+        userId: str | None = None,
+        muId: str | None = None,
+        countryId: str | None = None,
+        partyId: str | None = None,
+        itemCode: ITEM | ITEM_MARKET_CODE | None = None,
+    ) -> tuple[Sequence[DonationTransaction], str | None]: ...
+
+
+    @overload
+    async def get_transactions(
+        self,
+        transactionType: Literal["articleTip"],
+        limit: int = 10,
+        cursor: str | None = None,
+        userId: str | None = None,
+        muId: str | None = None,
+        countryId: str | None = None,
+        partyId: str | None = None,
+        itemCode: ITEM | ITEM_MARKET_CODE | None = None,
+    ) -> tuple[Sequence[ArticleTipTransaction], str | None]: ...
+
+
+    @overload
+    async def get_transactions(
+        self,
+        transactionType: Literal["openCase"],
+        limit: int = 10,
+        cursor: str | None = None,
+        userId: str | None = None,
+        muId: str | None = None,
+        countryId: str | None = None,
+        partyId: str | None = None,
+        itemCode: ITEM | ITEM_MARKET_CODE | None = None,
+    ) -> tuple[Sequence[OpenCaseTransaction], str | None]: ...
+
+
+    @overload
+    async def get_transactions(
+        self,
+        transactionType: Literal["craftItem"],
+        limit: int = 10,
+        cursor: str | None = None,
+        userId: str | None = None,
+        muId: str | None = None,
+        countryId: str | None = None,
+        partyId: str | None = None,
+        itemCode: ITEM | ITEM_MARKET_CODE | None = None,
+    ) -> tuple[Sequence[CraftItemTransaction], str | None]: ...
+
+
+    @overload
+    async def get_transactions(
+        self,
+        transactionType: Literal["dismantleItem"],
+        limit: int = 10,
+        cursor: str | None = None,
+        userId: str | None = None,
+        muId: str | None = None,
+        countryId: str | None = None,
+        partyId: str | None = None,
+        itemCode: ITEM | ITEM_MARKET_CODE | None = None,
+    ) -> tuple[Sequence[DismantleItemTransaction], str | None]: ...
+
 
     async def get_transactions(
         self,
@@ -878,7 +1151,7 @@ class WarEraClient:
         countryId: str | None = None,
         partyId: str | None = None,
         itemCode: ITEM | ITEM_MARKET_CODE | None = None,
-    ) -> tuple[list[Transaction], str | None]:
+    ) -> tuple[Sequence[Transaction], str | None]:
         '''
         transaction.get_transactions
         get many transactions with optional filtering
@@ -933,7 +1206,153 @@ class WarEraClient:
             ],
             result.get("nextCursor", None)
         )
-    
+
+    @overload
+    def iter_transactions(
+        self,
+        transactionType: Literal["trading"],
+        cursor: str | None = None,
+        userId: str | None = None,
+        muId: str | None = None,
+        countryId: str | None = None,
+        partyId: str | None = None,
+        itemCode: ITEM | ITEM_MARKET_CODE | None = None
+    ) -> AsyncGenerator[TradingTransaction, None]: ...
+
+
+    @overload
+    def iter_transactions(
+        self,
+        transactionType: Literal["itemMarket"],
+        cursor: str | None = None,
+        userId: str | None = None,
+        muId: str | None = None,
+        countryId: str | None = None,
+        partyId: str | None = None,
+        itemCode: ITEM | ITEM_MARKET_CODE | None = None
+    ) -> AsyncGenerator[ItemMarketTransaction, None]: ...
+
+
+    @overload
+    def iter_transactions(
+        self,
+        transactionType: Literal["battleLoot"],
+        cursor: str | None = None,
+        userId: str | None = None,
+        muId: str | None = None,
+        countryId: str | None = None,
+        partyId: str | None = None,
+        itemCode: ITEM | ITEM_MARKET_CODE | None = None
+    ) -> AsyncGenerator[BattleLootTransaction, None]: ...
+
+
+    @overload
+    def iter_transactions(
+        self,
+        transactionType: Literal["wage"],
+        cursor: str | None = None,
+        userId: str | None = None,
+        muId: str | None = None,
+        countryId: str | None = None,
+        partyId: str | None = None,
+        itemCode: ITEM | ITEM_MARKET_CODE | None = None
+    ) -> AsyncGenerator[WageTransaction, None]: ...
+
+
+    @overload
+    def iter_transactions(
+        self,
+        transactionType: Literal["donation"],
+        cursor: str | None = None,
+        userId: str | None = None,
+        muId: str | None = None,
+        countryId: str | None = None,
+        partyId: str | None = None,
+        itemCode: ITEM | ITEM_MARKET_CODE | None = None
+    ) -> AsyncGenerator[DonationTransaction, None]: ...
+
+
+    @overload
+    def iter_transactions(
+        self,
+        transactionType: Literal["articleTip"],
+        cursor: str | None = None,
+        userId: str | None = None,
+        muId: str | None = None,
+        countryId: str | None = None,
+        partyId: str | None = None,
+        itemCode: ITEM | ITEM_MARKET_CODE | None = None
+    ) -> AsyncGenerator[ArticleTipTransaction, None]: ...
+
+
+    @overload
+    def iter_transactions(
+        self,
+        transactionType: Literal["openCase"],
+        cursor: str | None = None,
+        userId: str | None = None,
+        muId: str | None = None,
+        countryId: str | None = None,
+        partyId: str | None = None,
+        itemCode: ITEM | ITEM_MARKET_CODE | None = None
+    ) -> AsyncGenerator[OpenCaseTransaction, None]: ...
+
+
+    @overload
+    def iter_transactions(
+        self,
+        transactionType: Literal["craftItem"],
+        cursor: str | None = None,
+        userId: str | None = None,
+        muId: str | None = None,
+        countryId: str | None = None,
+        partyId: str | None = None,
+        itemCode: ITEM | ITEM_MARKET_CODE | None = None
+    ) -> AsyncGenerator[CraftItemTransaction, None]: ...
+
+
+    @overload
+    def iter_transactions(
+        self,
+        transactionType: Literal["dismantleItem"],
+        cursor: str | None = None,
+        userId: str | None = None,
+        muId: str | None = None,
+        countryId: str | None = None,
+        partyId: str | None = None,
+        itemCode: ITEM | ITEM_MARKET_CODE | None = None
+    ) -> AsyncGenerator[DismantleItemTransaction, None]: ...
+
+
+    async def iter_transactions(
+        self,
+        transactionType: TRANSACTION_TYPE,
+        cursor: str | None = None,
+        userId: str | None = None,
+        muId: str | None = None,
+        countryId: str | None = None,
+        partyId: str | None = None,
+        itemCode: ITEM | ITEM_MARKET_CODE | None = None
+    ) -> AsyncGenerator[Transaction, None]:
+
+        cursor = cursor or ""
+
+        while cursor is not None:
+
+            transactions, cursor = await self.get_transactions(
+                transactionType=transactionType,
+                cursor=cursor,
+                userId=userId,
+                muId=muId,
+                countryId=countryId,
+                partyId=partyId,
+                itemCode=itemCode,
+                limit=100
+            )
+
+            for tx in transactions:
+
+                yield tx
     
     # Upgrade
 
@@ -1066,7 +1485,29 @@ class WarEraClient:
             ],
             result.get("nextCursor")
         )
-    
+
+
+    async def iter_events(
+        self,
+        cursor: str | None = None,
+        countryId: str | None = None,
+        eventTypes: list[EVENT_TYPES] | None = None
+    ) -> AsyncGenerator[Event, None]:
+        
+        cursor = cursor or ""
+
+        while cursor is not None:
+
+            events, cursor = await self.get_events(
+                cursor=cursor,
+                countryId=countryId,
+                eventTypes=eventTypes,
+                limit=100
+            )
+
+            for event in events:
+
+                yield event
 
     # Government
 
@@ -1229,6 +1670,37 @@ class WarEraClient:
             ],
             result.get("nextCursor")
         )
+
+    
+    async def iter_battles(
+        self,
+        isActive: bool = True,
+        cursor: str | None = None,
+        direction: Literal["forward", "backward"] = "forward",
+        filter: BATTLE_FILTER = "all",
+        defenderRegionId: str | None = None,
+        warId: str | None = None,
+        countryId: str | None = None
+    ) -> AsyncGenerator[Battle, None]:
+
+        cursor = cursor or ""
+
+        while cursor is not None:
+
+            battles, cursor = await self.get_battles(
+                isActive=isActive,
+                cursor=cursor,
+                direction=direction,
+                filter=filter,
+                defenderRegionId=defenderRegionId,
+                warId=warId,
+                countryId=countryId,
+                limit=100
+            )
+
+            for battle in battles:
+
+                yield battle
     
 
     async def get_live_battle_data(
@@ -1695,3 +2167,104 @@ class WarEraClient:
         )
 
         return War(**result)
+    
+
+    # Mercenary Contract Auction
+
+
+    async def get_mercenary_contract_auctions(
+        self,
+        limit: int = 10,
+        cursor: str | None = None,
+        status: MERCENARY_CONTRACT_STATUS | None = None,
+        muId: str | None = None,
+        forCountry: str | None = None,
+        battleId: str | None = None,
+        forCountrySide: WAR_ROLE | None = None,
+        professionals_only: bool | None = None,
+        sort_by: MERCENARY_CONTRACT_SORT_BY | None = None,
+        sortOrder: SORT_ORDER | None = None,
+    ) -> tuple[list[MercenaryContractAuction], str | None]:
+        '''
+        mercenaryContractAuction.get_mercenary_contract_auctions
+        get many mercenary contract auctions with optional filtering
+
+        :param limit: the amount of auctions returned
+        :type limit: int
+        :param cursor: the key for fetching the next page results
+        :type cursor: str | None
+        :param status: the status of the auctions (optional)
+        :type status: MERCENARY_CONTRACT_STATUS | None
+        :param muId: the Id of the mercenary (optional)
+        :type muId: str | None
+        :param forCountry: the country for which the auctions are intended (optional)
+        :type forCountry: str | None
+        :param battleId: the Id of the battle (optional)
+        :type battleId: str | None
+        :param forCountrySide: the side of the country in the battle (optional)
+        :type forCountrySide: WAR_ROLE | None
+        :param professionals_only: whether to filter only professional mercenaries (optional)
+        :type professionals_only: bool | None
+        :param sort_by: the field by which to sort the auctions (optional)
+        :type sort_by: MERCENARY_CONTRACT_SORT_BY | None
+        :param sortOrder: the order in which to sort the auctions (optional)
+        :type sortOrder: SORT_ORDER | None
+        :return: a list of MercenaryContractAuction objects
+        :rtype: list[MercenaryContractAuction]
+        '''
+
+        result = await self.request(
+            method="POST",
+            endpoint="mercenaryContractAuction.getPaginatedAuctions",
+            body={
+                "limit": limit,
+                "cursor": cursor or "",
+                "status": status or "",
+                "muId": muId or "",
+                "forCountry": forCountry or "",
+                "battleId": battleId or "",
+                "forCountrySide": forCountrySide or "",
+                "professionals_only": professionals_only or False,
+                "sort_by": sort_by or "",
+                "sortOrder": sortOrder or ""
+            }
+        )
+
+        return (
+            [MercenaryContractAuction(**auction) for auction in result["items"]],
+            result.get("nextCursor")
+        )
+    
+
+    async def iter_mercenary_contract_auctions(
+        self,
+        cursor: str | None = None,
+        status: MERCENARY_CONTRACT_STATUS | None = None,
+        muId: str | None = None,
+        forCountry: str | None = None,
+        battleId: str | None = None,
+        forCountrySide: WAR_ROLE | None = None,
+        professionals_only: bool | None = None,
+        sort_by: MERCENARY_CONTRACT_SORT_BY | None = None,
+        sortOrder: SORT_ORDER | None = None,
+    ) -> AsyncGenerator[MercenaryContractAuction, None]:
+
+        cursor = cursor or ""
+
+        while cursor is not None:
+
+            auctions, cursor = await self.get_mercenary_contract_auctions(
+                limit=50,
+                cursor=cursor,
+                status=status,
+                muId=muId,
+                forCountry=forCountry,
+                battleId=battleId,
+                forCountrySide=forCountrySide,
+                professionals_only=professionals_only,
+                sort_by=sort_by,
+                sortOrder=sortOrder
+            )
+
+            for auction in auctions:
+                yield auction
