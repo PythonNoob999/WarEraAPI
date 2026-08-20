@@ -30,3 +30,7 @@ class Battle:
     isBigBattle: bool | None = field(default=None)
     tournament: str | None = field(default=None)
     tournamentRoundNumber: int | None = field(default=None)
+    endedAt: datetime | None = field(default=None)
+    wonBy: WAR_ROLE | None = field(default=None)
+    badgesProcessed: bool | None = field(default=None)
+    isResistance: bool | None = field(default=None)

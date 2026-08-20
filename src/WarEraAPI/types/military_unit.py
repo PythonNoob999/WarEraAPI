@@ -29,6 +29,7 @@ class MilitaryUnit:
     investedMoneyByUsers: dict[str, float] | None = field(default=None)
     lastReputationBuyAt: datetime | None = field(default=None)
     lastCountryChangeAt: datetime | None = field(default=None)
+    lastAnnouncementAt: datetime | None = field(default=None)
 
 
     def __post_init__(self):

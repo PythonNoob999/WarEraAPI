@@ -21,6 +21,9 @@ class Article:
     createdAt: datetime | None = field(default=None)
     updatedAt: datetime | None = field(default=None)
     publishedAt: datetime | None = field(default=None)
+    isPublic: bool | None = field(default=None)
+    slug: str | None = field(default=None)
+    welcomeArticleOfCountry: bool | None = field(default=None)
 
 
     def __post_init__(self):
