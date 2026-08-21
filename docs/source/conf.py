@@ -14,7 +14,7 @@ sys.path.insert(0, str(Path('..', 'src').resolve()))
 project = 'WarEraAPI'
 copyright = '2026, SpicyPenguin'
 author = 'SpicyPenguin'
-release = '0.6.28'
+release = '0.6.29'
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration

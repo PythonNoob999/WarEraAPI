@@ -34,3 +34,8 @@ class Battle:
     wonBy: WAR_ROLE | None = field(default=None)
     badgesProcessed: bool | None = field(default=None)
     isResistance: bool | None = field(default=None)
+    revolutionParty: str | None = field(default=None)
+    revolutionProcessed: bool | None = field(default=None)
+    isSystemResistance: bool | None = field(default=None)
+    resistanceByForeignCountry: str | None = field(default=None)
+    financedByCountry: str | None = field(default=None)
