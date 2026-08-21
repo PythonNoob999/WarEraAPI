@@ -568,6 +568,16 @@ class MercenaryContractAuctionBid(TypedDict):
     perK: float
     bidAt: datetime
 
+# Battle Loot Summary
+
+class BattleItemLoot(TypedDict):
+
+    item: ItemMarket
+    rank: int
+    round: str
+    # TODO: enhance type hint
+    pool: str
+
 # Minimal Stuff
 
 class MinimalRound(TypedDict):

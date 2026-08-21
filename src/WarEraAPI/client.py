@@ -2268,3 +2268,33 @@ class WarEraClient:
 
             for auction in auctions:
                 yield auction
+
+
+    # Battle Loot
+
+    async def get_battle_loot_summary(
+        self,
+        userId: str,
+        battleId: str
+    ) -> BattleLoot:
+        '''
+        battleLootSummary.get_by_battle_and_user
+        get a user battle loot
+        
+        :param userId: the user Id
+        :type userId: str
+        :param battleId: the battle Id
+        :type battleId: str
+        :return: a BattleLoot object
+        :rtype: BattleLoot'''
+
+        result = await self.request(
+            method="POST",
+            endpoint="battleLootSummary.getByBattleAndUser",
+            body={
+                "userId": userId,
+                "battleId": battleId
+            }
+        )
+
+        return BattleLoot(**result)

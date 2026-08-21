@@ -26,6 +26,7 @@ from .tournament import Tournament
 from .tournament_team import TournamentTeam
 from .war import War
 from .mercenary_contract_auction import MercenaryContractAuction
+from .battle_loot import BattleLoot
 from .transactions import *
 from .constants import *
 from .events import *
