@@ -4,7 +4,7 @@ from datetime import datetime
 from WarEraAPI.types.constants import WAR_TYPE
 from WarEraAPI.types.constants import WAR_ROLE
 from WarEraAPI.types.constants import BattleParticipant
-from typing import Literal
+from WarEraAPI.utils import edit_types
 
 
 @dataclass
@@ -39,3 +39,8 @@ class Battle:
     isSystemResistance: bool | None = field(default=None)
     resistanceByForeignCountry: str | None = field(default=None)
     financedByCountry: str | None = field(default=None)
+
+
+    def __post_init__(self):
+
+        edit_types(self)
