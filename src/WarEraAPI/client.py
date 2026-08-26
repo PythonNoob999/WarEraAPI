@@ -457,7 +457,7 @@ class WarEraClient:
         energy: int = 0,
         production: int = 0,
         citizenship: str | None = None,
-    ) -> AsyncGenerator[WorkOffer]:
+    ) -> AsyncGenerator[WorkOffer, None]:
 
         cursor = cursor or ""
 
