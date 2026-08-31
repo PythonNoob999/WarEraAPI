@@ -27,6 +27,7 @@ class Region:
     climate: str
     resistance: int
     resistanceMax: int
+    currentPopulation: int
     # idk about these also
     stats: dict
     dates: dict
