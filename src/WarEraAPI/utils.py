@@ -3,6 +3,8 @@ from typing import get_args
 
 from json import dumps
 
+import re
+
 
 def pretty_json(
     data: dict
@@ -31,6 +33,19 @@ def edit_types(
     obj: object,
     class_overwrite: type | None = None
 ) -> None:
+
+
+    def from_iso_format(
+        date: str
+    ) -> datetime:
+
+        is_out_of_bounds = int((re.search(r"^\+(\d+)", date) or [0, 0])[1]) > 9999
+
+        if is_out_of_bounds:
+            return datetime.max
+
+        return datetime.fromisoformat(date)
+
     
     for attr_name,attr_type in (
         obj.__annotations__.items() if class_overwrite==None else
@@ -43,7 +58,7 @@ def edit_types(
 
             # fix dates from api response
             if datetime in attr_type and isinstance(cur_value, str):
-                setattr(obj, attr_name,datetime.fromisoformat(cur_value))
+                setattr(obj, attr_name,from_iso_format(cur_value))
             
             # fix list of dates
             elif datetime in attr_type and isinstance(cur_value, list):
@@ -52,7 +67,7 @@ def edit_types(
 
                 for date in cur_value:
                     new_value.append(
-                        datetime.fromisoformat(date)
+                        from_iso_format(date)
                     )
                 
                 setattr(obj, attr_name, new_value)
@@ -65,7 +80,7 @@ def edit_types(
 
             # fix dates from api response
             if datetime in attr_type and isinstance(cur_value, str):
-                obj[attr_name] = datetime.fromisoformat(cur_value)
+                obj[attr_name] = from_iso_format(cur_value)
 
             # fix list of dates
             elif datetime in attr_type and isinstance(cur_value, list):
@@ -74,7 +89,7 @@ def edit_types(
 
                 for date in cur_value:
                     new_value.append(
-                        datetime.fromisoformat(date)
+                        from_iso_format(date)
                     )
                 
                 obj[attr_name] = new_value
