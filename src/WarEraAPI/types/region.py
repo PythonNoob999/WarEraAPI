@@ -28,9 +28,12 @@ class Region:
     resistance: int
     resistanceMax: int
     currentPopulation: int
+    population: int
+    residents: int
     # idk about these also
     stats: dict
     dates: dict
+    resistanceFocus: dict | None = field(default=None)
     # optional
     activeBattle: dict | None = field(default=None)
     hasCoast: bool | None = field(default=None)
